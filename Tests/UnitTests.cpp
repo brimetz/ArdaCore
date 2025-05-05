@@ -17,7 +17,7 @@ TestUnit::~TestUnit()
 int TestUnit::RunTestGroups()
 {
 	bool fail = false;
-	for (uint32_t i{ 0 }; i < groupsSize; ++i)
+	for (uint32 i{ 0 }; i < groupsSize; ++i)
 	{
 		printf("[%s]\n", groups[i]->name);
 		groups[i]->RunTests();
@@ -35,7 +35,7 @@ int TestUnit::RunTestGroups()
 	}
 
 	printf("summary:\n");
-	for (uint32_t i{ 0 }; i < groupsSize; ++i)
+	for (uint32 i{ 0 }; i < groupsSize; ++i)
 	{
 		if (groups[i]->testsFailCount)
 		{
@@ -69,7 +69,7 @@ void TestUnit::AddTestGroup(TestGroup_Base* newGroup)
 	}
 
 	// Find the first slot available in the groups array
-	uint32_t pos = groupsSize;
+	uint32 pos = groupsSize;
 	while (pos > 0)
 	{
 		if (strcmp(newGroup->name, groups[pos - 1]->name) >= 0)
@@ -80,7 +80,7 @@ void TestUnit::AddTestGroup(TestGroup_Base* newGroup)
 		--pos;
 	}
 
-	for (uint32_t i{ groupsSize }; i > pos; --i)
+	for (uint32 i{ groupsSize }; i > pos; --i)
 	{
 		groups[i] = groups[i - 1];
 	}
@@ -105,7 +105,7 @@ TestGroup_Base::~TestGroup_Base()
 
 void TestGroup_Base::RunTests()
 {
-	for (uint32_t i{ 0 }; i < testsSize; ++i)
+	for (uint32 i{ 0 }; i < testsSize; ++i)
 	{
 		printf("|-[%s]\n", tests[i]->name);
 		tests[i]->Run();

@@ -17,7 +17,7 @@ file(GLOB_RECURSE SRC
 set(ArdaCoreLibTarget ArdaCore)
 add_library(${ArdaCoreLibTarget}
 		${SRC}
-)
+  "Core.h" "Assert.h" "DynamicArray.cpp")
 
 if (MSVC)
 	target_compile_options(${ArdaCoreLibTarget} PRIVATE /MP)	# Multithread compilation

@@ -4,22 +4,16 @@
 
 TESTGROUP(Array)
 {
-	UNITTEST(Constructor)
+	UNITTEST(Array)
 	{
-		CHECK_EQUAL(1, 1)
-		CHECK_EQUAL(1, 1)
-		CHECK_EQUAL(0, 1)
-		CHECK_EQUAL(1, 1)
-		CHECK_EQUAL(1, 1)
-	}
+		Array<int, 5> dummy = {0, 1, 2, 3, 4};
+		CHECK_EQUAL(dummy[3], 3)
 
-	UNITTEST(Addition)
-	{
-		CHECK_EQUAL(0, 1)
-		CHECK_EQUAL(1, 1)
-		CHECK_EQUAL(1, 1)
-		CHECK_EQUAL(0, 1)
-		CHECK_EQUAL(1, 1)
+		dummy.FillArray(1);
+		for (int val : dummy)
+		{
+			CHECK_EQUAL(val, 1)
+		}
 	}
 }
 

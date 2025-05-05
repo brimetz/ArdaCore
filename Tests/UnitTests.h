@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include "ArdaCore/Core.h"
 
 #include <stdio.h>
 #include <cstdlib>
@@ -117,8 +117,8 @@ struct TestUnit
 	void AddTestGroup(TestGroup_Base* newGroup);
 
 	TestGroup_Base** groups = nullptr;
-	uint32_t groupsSize = 0;
-	uint32_t groupsCap = 0;
+	uint32 groupsSize = 0;
+	uint32 groupsCap = 0;
 };
 
 struct TestGroup_Base
@@ -134,10 +134,10 @@ struct TestGroup_Base
 
 	char const* name;
 	TestBase** tests{ nullptr };
-	uint32_t testsSize = 0;
-	uint32_t testsCap = 0;
+	uint32 testsSize = 0;
+	uint32 testsCap = 0;
 
-	uint32_t testsFailCount = 0;
+	uint32 testsFailCount = 0;
 };
 
 struct TestBase
@@ -151,8 +151,8 @@ struct TestBase
 	virtual void Run() = 0;
 
 	char const* name;
-	uint32_t checksCount = 0;
-	uint32_t checksFailCount = 0;
+	uint32 checksCount = 0;
+	uint32 checksFailCount = 0;
 };
 
 
@@ -172,23 +172,23 @@ constexpr bool is_pointer_v<T*> = true;
 template <typename T>
 bool PrintValue(char* buf, char const* valStr, T const& val)
 {
-	if constexpr (is_same_v<T, int8_t> || is_same_v<T, int16_t> || is_same_v<T, int32_t>)
+	if constexpr (is_same_v<T, int8> || is_same_v<T, int16> || is_same_v<T, int32>)
 	{
 		snprintf(buf, 64, "%i", val);
 		return strcmp(buf, valStr) != 0;
 	}
-	else if constexpr (is_same_v<T, int64_t>)
+	else if constexpr (is_same_v<T, int64>)
 	{
 		snprintf(buf, 64, "%ji", val);
 		return strcmp(buf, valStr) != 0;
 	}
-	else if constexpr (is_same_v<T, uint8_t> || is_same_v<T, uint16_t> ||
-		is_same_v<T, uint32_t>)
+	else if constexpr (is_same_v<T, uint8> || is_same_v<T, uint16> ||
+		is_same_v<T, uint32>)
 	{
 		snprintf(buf, 64, "%u", val);
 		return strcmp(buf, valStr) != 0;
 	}
-	else if constexpr (is_same_v<T, uint64_t>)
+	else if constexpr (is_same_v<T, uint64>)
 	{
 		snprintf(buf, 64, "%ju", val);
 		return strcmp(buf, valStr) != 0;
