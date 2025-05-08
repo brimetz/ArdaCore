@@ -7,7 +7,7 @@ template <typename T, int Size>
 struct Array
 {
 	constexpr static int GetSize() { return Size; }
-	constexpr T* Data() { return data };
+	constexpr T* Data() { return data; }
 
 	// Used that for iterator iteration. "m_data + m_size" return the first invalid pointer after the array
 	constexpr T* End() { return data + Size; }
@@ -35,5 +35,5 @@ struct Array
 		}
 	}
 
-	T data[taSize];
+	T data[Size];
 };

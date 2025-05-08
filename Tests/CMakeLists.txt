@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.29.5)
 
-project ("ArdaCoreTests")
+#project ("ArdaCoreTests")
 
 # Add all files from the source/ folder to CMake
 file(GLOB_RECURSE SRC
@@ -11,4 +11,4 @@ file(GLOB_RECURSE SRC
 add_executable (ArdaCoreExe ${SRC})
 
 target_include_directories(ArdaCoreExe PUBLIC "../")
-set_property(TARGET ArdaCore PROPERTY CXX_STANDARD 20)
+#set_property(TARGET ArdaCore PROPERTY CXX_STANDARD 20)

@@ -1,5 +1,7 @@
 .vs/*
 out/*
+ArdaCore/out/*
+ArdaCore/.vs/*
 
 # Prerequisites
 *.d
