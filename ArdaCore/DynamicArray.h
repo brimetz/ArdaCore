@@ -30,10 +30,10 @@ struct DynamicArray
 	// Used that for iterator iteration. "m_data + m_size" return the first invalid pointer after the array
 	constexpr T* End() { return m_data + m_size; }
 	constexpr T* Begin() { return m_data; }
-	constexpr const T* End() const { return m_data + m_size; }
-	constexpr const T* Begin() const { return m_data; }
 	constexpr T* end() { return m_data + m_size; }
 	constexpr T* begin() { return m_data; }
+	constexpr const T* End() const { return m_data + m_size; }
+	constexpr const T* Begin() const { return m_data; }
 	constexpr const T* end() const { return m_data + m_size; }
 	constexpr const T* begin() const { return m_data; }
 

@@ -10,6 +10,10 @@ struct Array
 	constexpr T* Data() { return data; }
 
 	// Used that for iterator iteration. "m_data + m_size" return the first invalid pointer after the array
+	constexpr const T* End() const { return data + Size; }
+	constexpr const T* Begin() const { return data; }
+	constexpr const T* end() const { return data + Size; }
+	constexpr const T* begin() const { return data; }
 	constexpr T* End() { return data + Size; }
 	constexpr T* Begin() { return data; }
 	constexpr T* end() { return data + Size; }
@@ -45,6 +49,7 @@ struct Array
 			element = value;
 		}
 	}
+	//@todo put data in private
 //private:
 	T data[Size];
 };
