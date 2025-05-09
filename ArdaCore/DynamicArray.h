@@ -3,7 +3,7 @@
 #include "Core.h"
 #include "Assert.h"
 #include <utility>
-#include <vector>
+#include <new>
 
 // @todo remove "m_" and put "in" in function parameter 
 
@@ -78,6 +78,7 @@ struct DynamicArray
 	void PushBack(T&& inValue);
 	void PopBack();
 
+private:
 	T* m_data = nullptr;
 	int m_size = 0;
 	int m_capacity = 0;
@@ -93,9 +94,14 @@ DynamicArray<T>::~DynamicArray()
 template<typename T>
 DynamicArray<T>::DynamicArray(DynamicArray const& inOther)
 {
-	m_data = inOther.m_data;
+	Reserve(inOther.m_size);
 	m_size = inOther.m_size;
-	m_capacity = inOther.m_capacity;
+
+	for (int index = 0; index < inOther.m_size; index++)
+	{
+		new (m_data+index) T(inOther.m_data[index]);
+	}
+
 }
 
 template<typename T>
@@ -126,7 +132,9 @@ DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray&& inOther)
 	m_size = std::move(inOther.m_size);
 	m_capacity = std::move(inOther.m_capacity);
 
-	inOther.FreeMemory();
+	inOther.m_size = 0;
+	inOther.m_capacity = 0;
+	inOther.m_data = nullptr;
 
 	return *this;
 }
@@ -134,18 +142,33 @@ DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray&& inOther)
 template<typename T>
 DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray const& inOther)
 {
-	m_data = inOther.m_data;
+	for (int index = 0; index < m_size; index++)
+	{
+		m_data[index].~T();
+	}
+
+	Reserve(inOther.m_size);
+
+	for (int index = 0; index < inOther.m_size; index++)
+	{
+		new (m_data + index) T(inOther.m_data[index]);
+	}
+
 	m_size = inOther.m_size;
-	m_capacity = inOther.m_capacity;
 	return *this;
 }
 
 template<typename T>
 DynamicArray<T>& DynamicArray<T>::operator=(const std::initializer_list<T>& inInitializerList)
 {
+	for (int index = 0; index < m_size; index++)
+	{
+		m_data[index].~T();
+	}
+	m_size = 0;
+	
 	Reserve(inInitializerList.size());
 
-	m_size = 0;
 	for (const T& value : inInitializerList)
 	{
 		PushBack(value);
@@ -157,7 +180,11 @@ DynamicArray<T>& DynamicArray<T>::operator=(const std::initializer_list<T>& inIn
 template<typename T>
 void DynamicArray<T>::Clear()
 {
-	m_data = nullptr;
+	for (int index = 0; index < m_size; index++)
+	{
+		m_data[index].~T();
+	}
+	m_size = 0;
 }
 
 template<typename T>
@@ -188,7 +215,7 @@ void DynamicArray<T>::Reserve(int inCapacity)
 	
 	for (int index = 0; index < m_size; index++)
 	{
-		newdata[index] = m_data[index];
+		newdata[index] = std::move(m_data[index]);
 		m_data[index].~T();
 	}
 	free(m_data);
@@ -215,6 +242,10 @@ void DynamicArray<T>::Resize(int inNewSize)
 	{
 		// Need to allocate more memory
 		Reserve(inNewSize);
+		for (uint32 index = m_size; index < inNewSize; index++)
+		{
+			new (m_data + index) T();
+		}
 	}
 
 	m_size = inNewSize;
@@ -240,10 +271,9 @@ void DynamicArray<T>::Resize(int inNewSize, T const& inBaseValue)
 	{
 		// Need to allocate more memory
 		Reserve(inNewSize);
-
 		for (uint32 index = m_size; index < inNewSize; index++)
 		{
-			m_data[index] = inBaseValue;
+			new (m_data + index) T(inBaseValue);
 		}
 	}
 
@@ -266,15 +296,15 @@ void DynamicArray<T>::Insert(int inPosition, T const& inValue)
 
 		for (int index = 0; index < inPosition; index++)
 		{
-			newdata[index] = m_data[index];
+			new (newdata + index) T(std::move(m_data[index]));
 			m_data[index].~T();
 		}
 
-		newdata[inPosition] = inValue;
+		new (newdata + inPosition) T(inValue);
 
 		for (int index = inPosition + 1; index < m_size + 1; index++)
 		{
-			newdata[index] = m_data[index-1];
+			new (newdata + index) T(std::move(m_data[index - 1]));
 			m_data[index-1].~T();
 		}
 
@@ -286,9 +316,10 @@ void DynamicArray<T>::Insert(int inPosition, T const& inValue)
 		// Move all elements after the new elements one to the right
 		for (int index = m_size; index != inPosition; index--)
 		{
-			m_data[index] = std::move(m_data[index - 1]);
+			new (m_data + index) T(std::move(m_data[index - 1]));
+			m_data[index - 1].~T();
 		}
-		m_data[inPosition] = inValue;
+		new (m_data + inPosition) T(inValue);
 	}
 	m_size += 1;
 }
@@ -309,15 +340,15 @@ void DynamicArray<T>::Insert(int inPosition, T&& inValue)
 
 		for (int index = 0; index < inPosition; index++)
 		{
-			newdata[index] = m_data[index];
+			new (newdata + index) T(std::move(m_data[index]));
 			m_data[index].~T();
 		}
 
-		newdata[inPosition] = inValue;
+		new (newdata + inPosition) T(std::move(inValue));
 
 		for (int index = inPosition + 1; index < m_size + 1; index++)
 		{
-			newdata[index] = m_data[index - 1];
+			new (newdata + index) T(std::move(m_data[index - 1]));
 			m_data[index - 1].~T();
 		}
 
@@ -329,9 +360,10 @@ void DynamicArray<T>::Insert(int inPosition, T&& inValue)
 		// Move all elements after the new elements one to the right
 		for (int index = m_size; index != inPosition; index--)
 		{
-			m_data[index] = std::move(m_data[index - 1]);
+			new (m_data + index) T(std::move(m_data[index - 1]));
+			m_data[index - 1].~T();
 		}
-		m_data[inPosition] = inValue;
+		new (m_data + inPosition) T(std::move(inValue));
 	}
 	m_size += 1;
 }
@@ -392,8 +424,10 @@ void DynamicArray<T>::Erase(int inPosition)
 
 	for (int index = inPosition; index < m_size - 1; index++)
 	{
-		m_data[index] = std::move(m_data[index + 1]);
+		m_data[index].~T();
+		new (m_data + index) T(std::move(m_data[index + 1]));
 	}
+	m_data[m_size-1].~T();
 	m_size--;
 }
 
@@ -410,7 +444,7 @@ void DynamicArray<T>::PushBack(const T& inValue)
 		Reserve(m_capacity * 2);
 	}
 
-	m_data[m_size] = inValue;
+	new (m_data + m_size) T(inValue);
 	m_size += 1;
 }
 
@@ -426,8 +460,8 @@ void DynamicArray<T>::PushBack(T&& inValue)
 		// need to allocate more memory
 		Reserve(m_capacity * 2);
 	}
-
-	m_data[m_size] = std::move(inValue);
+	
+	new (m_data + m_size) T(std::move(inValue));
 	m_size += 1;
 }
 

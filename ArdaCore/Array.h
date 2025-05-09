@@ -15,6 +15,17 @@ struct Array
 	constexpr T* end() { return data + Size; }
 	constexpr T* begin() { return data; }
 
+	/*template<typename T>
+	Array<T>::Array(const std::initializer_list<T>& inInitializerList)
+	{
+		Reserve(inInitializerList.size());
+
+		for (const T& value : inInitializerList)
+		{
+			PushBack(value);
+		}
+	}*/
+
 	constexpr T& operator[](int index)
 	{
 		Assert(index >= 0 && index < Size)
@@ -34,6 +45,6 @@ struct Array
 			element = value;
 		}
 	}
-
+//private:
 	T data[Size];
 };
