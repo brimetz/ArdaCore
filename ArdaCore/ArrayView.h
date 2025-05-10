@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ArdaCore/Core.h"
+#include "ArdaCore/Assert.h"
 
 template <typename T>
 struct ArrayView
@@ -14,6 +15,7 @@ struct ArrayView
 	constexpr ArrayView& operator=(ArrayView&& inOther) = default;
 	constexpr const T& operator[](int inIndex) { return m_data[inIndex]; }
 
+	// https://brevzin.github.io/c++/2020/02/05/constexpr-array-size/
 	template<int Size>
 	constexpr ArrayView(const T(&arr)[Size]) :
 		m_data{ arr },

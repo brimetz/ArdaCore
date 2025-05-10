@@ -1,67 +1,82 @@
 #include "UnitTests.h"
-
-#include <ArdaCore/Array.h>
-#include <ArdaCore/DynamicArray.h>
-#include <ArdaCore/ArrayView.h>
+#include <ArdaCore/Core.h>
+#include <ArdaCore/StringView.h>
+#include <string.h>
 
 /*
 @todo list
 - String
-- StringView
 - Small String Optimization
 - Algorythm Idea: BFS DFS Dijkstra A*
+- Utilities with GeometricMean
 - Hashing/HashMap
 */
 
-TESTGROUP(ArrayView)
+TESTGROUP(StringView)
 {
 	UNITTEST(Constructor)
 	{
-		uint32 test[5]{ 0, 1, 2, 3, 4 };
-		ArrayView dummy(test);
-		CHECK_EQUAL(dummy.Size(), 5);
-		for (int i{ 0 }; i < dummy.Size(); ++i)
-		{
-			CHECK_EQUAL(dummy[i], i)
-		}
+		StringView dummy;
+		CHECK_EQUAL(dummy.Size(), 0);
+		CHECK_EQUAL(dummy.Data(), nullptr);
+		CHECK_EQUAL(dummy.IsEmpty(), true);
 
-		uint32* dummyOnHeap = new uint32[5]{ 0, 1, 2, 3, 4 };
-		ArrayView Copy{ dummyOnHeap, 5 };
-		CHECK_EQUAL(Copy.Size(), 5);
-		for (int i{ 0 }; i < Copy.Size(); ++i)
-		{
-			CHECK_EQUAL(Copy[i], i);
-		}
+		const char* ptr = "Hola mi amigo !";
+		StringView dummy2(ptr, 15);
+		CHECK_EQUAL(dummy2.Size(), 15);
+		CHECK_EQUAL(dummy2.Data(), ptr);
+		CHECK_EQUAL(dummy2.IsEmpty(), false);
 
-		delete[] dummyOnHeap;
+		StringView dummy3 = dummy2;
+		CHECK_EQUAL(dummy3.Size(), 15);
+		CHECK_EQUAL(dummy3.Data(), ptr);
+		CHECK_EQUAL(dummy3.IsEmpty(), false);
 	}
 
-	UNITTEST(Operator)
+	UNITTEST(DeletePreAndSuffix)
 	{
-		ArrayView dummy({ 0, 1, 2, 3, 4 });
-		ArrayView dummyEqual({ 0, 1, 2, 3, 4 });
-		CHECK_EQUAL(dummy == dummyEqual, true);
+		char const* ptr = "Hola mi amigo !";
+		StringView dummy(ptr, 15);
 
-		ArrayView dummyNotEqual({ 0, 0, 2, 3, 0 });
-		CHECK_EQUAL(dummy == dummyNotEqual, false);
+		dummy.DeletePrefix(4);
+		CHECK_EQUAL(dummy.Size(), 11);
+		CHECK_EQUAL(strncmp(dummy.Data(), " mi amigo !", dummy.Size()), 0);
 
-		ArrayView dummy4(dummyEqual);
-		CHECK_EQUAL(dummy4 == dummyEqual, true);
-
-		ArrayView dummy5(ArrayView({ 0, 1, 2, 3, 4 }));
-		CHECK_EQUAL(dummy5 == ArrayView({ 0, 1, 2, 3, 4 }), true);
+		dummy.DeleteSuffix(2);
+		CHECK_EQUAL(dummy.Size(), 9);
+		CHECK_EQUAL(strncmp(dummy.Data(), " mi amigo", dummy.Size()), 0);
 	}
 
-	UNITTEST(SubArray)
+	UNITTEST(StartsEndWith)
 	{
-		ArrayView dummy({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+		char const* ptr = "Hola mi amigo !";
+		StringView dummy(ptr, 15);
 
-		ArrayView Start (dummy.GetStartTo(4));
-		CHECK_EQUAL(Start == ArrayView({ 0, 1, 2, 3}), true);
+		CHECK_EQUAL(dummy.StartsWith('H'), true);
+		CHECK_EQUAL(dummy.StartsWith(StringView("Hola", 4)), true);
+		
+		CHECK_EQUAL(dummy.EndsWith('!'), true);
+		CHECK_EQUAL(dummy.EndsWith(StringView("go !", 4)), true);
+	}
 
-		ArrayView End(dummy.GetEndFrom(4));
-		CHECK_EQUAL(End == ArrayView({ 6, 7, 8, 9 }), true);
-		ArrayView SubPart(dummy.GetSubArray(4, 3));
-		CHECK_EQUAL(SubPart == ArrayView({ 4, 5, 6 }), true);
+	UNITTEST(ContainsAndFind)
+	{
+		char const* ptr = "Hola mi amigo !";
+		StringView dummy(ptr, 15);
+
+		CHECK_EQUAL(dummy.Contains('a'), true);
+		CHECK_EQUAL(dummy.Contains(StringView("a mi", 4)), true);
+
+		CHECK_EQUAL(dummy.Find('?'), -1);
+		CHECK_EQUAL(dummy.Find('i'), 6);
+		CHECK_EQUAL(dummy.Find(StringView("a mi", 4)), 3);
+	}
+
+	UNITTEST(SubString)
+	{
+		char const* ptr = "Hola mi amigo !";
+		StringView dummy(ptr, 15);
+		StringView subString = dummy.GetSubString(3, 4);
+		CHECK_EQUAL(StringView("a mi", 4), subString);
 	}
 }

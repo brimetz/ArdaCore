@@ -11,4 +11,6 @@ file(GLOB_RECURSE SRC
 add_executable (ArdaCoreExe ${SRC})
 
 target_include_directories(ArdaCoreExe PUBLIC "../")
+target_link_libraries(ArdaCoreExe ArdaCoreLib)
+
 #set_property(TARGET ArdaCore PROPERTY CXX_STANDARD 20)

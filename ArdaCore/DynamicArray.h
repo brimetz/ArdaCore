@@ -13,11 +13,11 @@ struct DynamicArray
 	constexpr DynamicArray() = default;
 	~DynamicArray();
 
-	DynamicArray(DynamicArray&& ioOther);
+	DynamicArray(DynamicArray&& inOther);
 	DynamicArray(DynamicArray const& inOther);
 	DynamicArray(const std::initializer_list<T>& inInitializerList);
 
-	DynamicArray& operator=(DynamicArray&& ioOther);
+	DynamicArray& operator=(DynamicArray&& inOther);
 	DynamicArray& operator=(DynamicArray const& inOther);
 	DynamicArray& operator=(const std::initializer_list<T>& inInitializerList);
 
@@ -205,9 +205,6 @@ void DynamicArray<T>::Reserve(int inCapacity)
 
 	m_capacity = inCapacity;
 
-	// Faire un alloc
-	// Copier la data a la main si buffer a changé en memoire
-	// Free l'ancien buffer
 	// Other Solution
 	// @todo Jeremie laumon has a TryRealloc to skip the copy sometime, TryRealloc give a bool to know if the allocation was possible
 	// in this case, we don't have to copy and free the old buffer
