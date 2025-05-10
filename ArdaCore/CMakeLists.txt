@@ -18,7 +18,7 @@ set(ArdaCoreLibTarget ArdaCoreLib)
 add_library(${ArdaCoreLibTarget}
 		${SRC})
 
-#target_include_directories(ArdaCoreLibTarget PUBLIC "../")
+target_include_directories(ArdaCoreLib PUBLIC "../")
 
 #if (MSVC)
 #	target_compile_options(${ArdaCoreLibTarget} PRIVATE /MP)	# Multithread compilation
