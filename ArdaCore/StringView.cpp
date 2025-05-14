@@ -112,12 +112,12 @@ uint32 StringView::Find(StringView inStr, uint32 inIndex) const
 {
 	uint32 startMatchIndex = 0;
 	uint32 nbMatches = 0;
-	for (int index = 0; index < m_size; index++)
+	for (int index = inIndex; index < m_size; index++)
 	{
 		// We can't find the inStr anymore, there is not enough character remaining
 		if (inStr.m_size - nbMatches > m_size)
 		{
-			return -1;
+			return UINT32_MAX;
 		}
 
 		if (m_data[index] == inStr[nbMatches])
@@ -133,7 +133,7 @@ uint32 StringView::Find(StringView inStr, uint32 inIndex) const
 			nbMatches = 0;
 		}
 	}
-	return -1;
+	return UINT32_MAX;
 }
 
 uint32 StringView::Find(const char c, uint32 inIndex) const
@@ -147,5 +147,5 @@ uint32 StringView::Find(const char c, uint32 inIndex) const
 			return index;
 		}
 	}
-	return -1;
+	return UINT32_MAX;
 }

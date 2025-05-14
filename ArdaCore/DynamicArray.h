@@ -6,6 +6,7 @@
 #include <new>
 
 // @todo remove "m_" and put "in" in function parameter 
+// find right name for template variable
 
 template <typename T>
 struct DynamicArray
@@ -208,6 +209,7 @@ void DynamicArray<T>::Reserve(int inCapacity)
 	// Other Solution
 	// @todo Jeremie laumon has a TryRealloc to skip the copy sometime, TryRealloc give a bool to know if the allocation was possible
 	// in this case, we don't have to copy and free the old buffer
+	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
 	T* newdata = new T[m_capacity];
 	
 	for (int index = 0; index < m_size; index++)
@@ -289,6 +291,7 @@ void DynamicArray<T>::Insert(int inPosition, T const& inValue)
 	if (m_capacity < m_size + 1)
 	{
 		m_capacity *= 2;
+		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
 		T* newdata = new T[m_capacity];
 
 		for (int index = 0; index < inPosition; index++)
@@ -333,6 +336,7 @@ void DynamicArray<T>::Insert(int inPosition, T&& inValue)
 	if (m_capacity < m_size + 1)
 	{
 		m_capacity *= 2;
+		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
 		T* newdata = new T[m_capacity];
 
 		for (int index = 0; index < inPosition; index++)
