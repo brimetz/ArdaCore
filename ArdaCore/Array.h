@@ -3,53 +3,41 @@
 #include "Assert.h"
 
 // List of elements
-template <typename T, int Size>
+template <typename DataType, int Size>
 struct Array
 {
 	constexpr static int GetSize() { return Size; }
-	constexpr T* Data() { return data; }
+	constexpr DataType* Data() { return data; }
 
 	// Used that for iterator iteration. "m_data + m_size" return the first invalid pointer after the array
-	constexpr const T* End() const { return data + Size; }
-	constexpr const T* Begin() const { return data; }
-	constexpr const T* end() const { return data + Size; }
-	constexpr const T* begin() const { return data; }
-	constexpr T* End() { return data + Size; }
-	constexpr T* Begin() { return data; }
-	constexpr T* end() { return data + Size; }
-	constexpr T* begin() { return data; }
+	constexpr const DataType* End() const { return data + Size; }
+	constexpr const DataType* Begin() const { return data; }
+	constexpr const DataType* end() const { return data + Size; }
+	constexpr const DataType* begin() const { return data; }
+	constexpr DataType* End() { return data + Size; }
+	constexpr DataType* Begin() { return data; }
+	constexpr DataType* end() { return data + Size; }
+	constexpr DataType* begin() { return data; }
 
-	/*template<typename T>
-	Array<T>::Array(const std::initializer_list<T>& inInitializerList)
+	constexpr DataType& operator[](int inIndex)
 	{
-		Reserve(inInitializerList.size());
-
-		for (const T& value : inInitializerList)
-		{
-			PushBack(value);
-		}
-	}*/
-
-	constexpr T& operator[](int index)
-	{
-		Assert(index >= 0 && index < Size)
-		return data[index];
+		Assert(inIndex >= 0 && inIndex < Size)
+		return data[inIndex];
 	}
 
-	constexpr T const& operator[](int index) const
+	constexpr DataType const& operator[](int inIndex) const
 	{
-		Assert(index >= 0 && index < Size)
-		return data[index];
+		Assert(inIndex >= 0 && inIndex < Size)
+		return data[inIndex];
 	}
 
-	void FillArray(const T& value)
+	void FillArray(const DataType& inValue)
 	{
-		for (T& element : data)
+		for (DataType& element : data)
 		{
-			element = value;
+			element = inValue;
 		}
 	}
-	//@todo put data in private
-//private:
-	T data[Size];
+
+	DataType data[Size];
 };

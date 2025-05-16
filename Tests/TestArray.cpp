@@ -6,7 +6,7 @@ TESTGROUP(Array)
 {
 	UNITTEST(Array)
 	{
-		Array<int, 5> dummy = { 0, 1, 2, 3, 4 };
+		Array<int, 5> dummy({ 0, 1, 2, 3, 4 });
 		CHECK_EQUAL(dummy[3], 3);
 
 		dummy.FillArray(1);

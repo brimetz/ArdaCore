@@ -20,9 +20,8 @@ String::String(uint32 inCount, char c) :
 	m_size{ inCount }
 {
 	Large.m_capacity = inCount;
-	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-	Large.m_data = new char[inCount+1];
-	// use memset to copy c in our data @todo make my own
+	Large.m_data = (char*)malloc(sizeof(char) * (inCount + 1));
+	// @todo make my own memset
 	memset(Large.m_data, c, inCount);
 	Large.m_data[inCount] = '\0';
 }
@@ -39,10 +38,8 @@ String::String(const char* inStr, uint32 inCount)
 		m_size = inCount;
 	}
 
-	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-	Large.m_data = new char[m_size+1];
+	Large.m_data = (char*)malloc(sizeof(char) * (m_size + 1));
 	Large.m_capacity = m_size;
-	// use memset to copy c in our data @todo make my own memcpy
 	memcpy(Large.m_data, inStr, m_size);
 	Large.m_data[m_size] = '\0';
 }
@@ -59,8 +56,7 @@ String::String(StringView inStr, uint32 inPos, uint32 inCount)
 	}
 
 	Large.m_capacity = m_size;
-	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-	Large.m_data = new char[m_size+1];
+	Large.m_data = (char*)malloc(sizeof(char) * (m_size + 1));
 	// @todo make my own memcpy
 	memcpy(Large.m_data, inStr.Data() + inPos, m_size);
 	Large.m_data[m_size] = '\0';
@@ -78,9 +74,7 @@ String::String(const String& inStr, uint32 inPos, uint32 inCount)
 	}
 
 	Large.m_capacity = m_size;
-	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-	Large.m_data = new char[m_size+1];
-	// @todo make my own memcpy
+	Large.m_data = (char*)malloc(sizeof(char) * (m_size + 1));
 	memcpy(Large.m_data, inStr.Data() + inPos, m_size);
 	Large.m_data[m_size] = '\0';
 }
@@ -97,8 +91,7 @@ String::String(String&& inStr, uint32 inPos, uint32 inCount)
 	}
 
 	Large.m_capacity = m_size;
-	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-	Large.m_data = new char[m_size+1];
+	Large.m_data = (char*)malloc(sizeof(char) * (m_size + 1));
 	// @todo make my own memmove
 	memmove(Large.m_data, inStr.Data() + inPos, m_size);
 	Large.m_data[m_size] = '\0';
@@ -108,9 +101,7 @@ String::String(const std::initializer_list<char> inList) :
 	m_size {static_cast<uint32>(inList.size())}
 {
 	Large.m_capacity = m_size;
-	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-	Large.m_data = new char[m_size+1];
-	// @todo make my own memmove
+	Large.m_data = (char*)malloc(sizeof(char) * (m_size + 1));
 	memcpy(Large.m_data, inList.begin(), m_size);
 	Large.m_data[m_size] = '\0';
 }
@@ -127,8 +118,7 @@ String& String::operator=(const char* inStr)
 	if (inStrSize >= Large.m_capacity)
 	{
 		free(Large.m_data);
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[inStrSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (inStrSize + 1));
 		Large.m_data = newData;
 		Large.m_capacity = inStrSize;
 	}
@@ -145,8 +135,7 @@ String& String::operator=(StringView inStr)
 	if (inStrSize >= Large.m_capacity)
 	{
 		free(Large.m_data);
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[inStrSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (inStrSize + 1));
 		Large.m_data = newData;
 		Large.m_capacity = inStrSize;
 	}
@@ -163,8 +152,7 @@ String& String::operator=(const String& inStr)
 	if (inStrSize >= Large.m_capacity)
 	{
 		free(Large.m_data);
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[inStrSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (inStrSize + 1));
 		Large.m_data = newData;
 		Large.m_capacity = inStrSize;
 	}
@@ -181,8 +169,7 @@ String& String::operator=(String&& inStr)
 	if (inStrSize >= Large.m_capacity)
 	{
 		free(Large.m_data);
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[inStrSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (inStrSize + 1));
 		Large.m_data = newData;
 		Large.m_capacity = inStrSize;
 	}
@@ -199,8 +186,7 @@ String& String::operator=(std::initializer_list<char> inList)
 	if (inListSize >= Large.m_capacity)
 	{
 		free (Large.m_data);
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[inListSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (inListSize + 1));
 		Large.m_data = newData;
 		Large.m_capacity = inListSize;
 	}
@@ -279,8 +265,7 @@ void String::Reserve(uint32 inCapacity)
 		return;
 	}
 
-	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-	char* newData = new char[inCapacity];
+	char* newData = (char*)malloc(sizeof(char) * (inCapacity));
 
 	if (Large.m_capacity != 0)
 	{
@@ -296,8 +281,7 @@ void String::ShrinkToFit()
 {
 	if (m_size != Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[m_size+1];
+		char* newData = (char*)malloc(sizeof(char) * (m_size + 1));
 		memcpy(newData, Large.m_data, m_size + 1);
 		free(Large.m_data);
 
@@ -317,8 +301,7 @@ void String::Resize(uint32 inSize, char c)
 
 	if (inSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[inSize+1];
+		char* newData = (char*)malloc(sizeof(char) * (inSize + 1));
 
 		memcpy(newData, Large.m_data, m_size);
 
@@ -337,9 +320,9 @@ void String::Resize(uint32 inSize, char c)
 	m_size = inSize;
 }
 
-void String::Insert(uint32 idx, uint32 inCount, char c)
+void String::Insert(uint32 inIndex, uint32 inCount, char c)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inCount, c);
 		return;
@@ -348,12 +331,11 @@ void String::Insert(uint32 idx, uint32 inCount, char c)
 	uint32 FutureSize = inCount + m_size;
 	if (FutureSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[FutureSize+1];
+		char* newData = (char*)malloc(sizeof(char) * (FutureSize + 1));
 
 		// put the old data inside the new array
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inCount, Large.m_data + idx, m_size - idx + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inCount, Large.m_data + inIndex, m_size - inIndex + 1);
 
 		// Remove and free the old array
 		free(Large.m_data);
@@ -363,17 +345,17 @@ void String::Insert(uint32 idx, uint32 inCount, char c)
 	else
 	{
 		// Create the hole in memory for inList data 
-		memmove(Large.m_data + idx + inCount, Large.m_data + idx,
-			m_size - idx + 1);
+		memmove(Large.m_data + inIndex + inCount, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 	}
 	// Put the inList data inside the new array at the right position
-	memset(Large.m_data + idx, c, inCount);
+	memset(Large.m_data + inIndex, c, inCount);
 	m_size = FutureSize;
 }
 
-void String::Insert(uint32 idx, const char* inStr, uint32 inCount)
+void String::Insert(uint32 inIndex, const char* inStr, uint32 inCount)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inStr);
 		return;
@@ -383,13 +365,12 @@ void String::Insert(uint32 idx, const char* inStr, uint32 inCount)
 	uint32 FutureSize = inListSize + m_size;
 	if (FutureSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[FutureSize+1];
+		char* newData = (char*)malloc(sizeof(char) * (FutureSize + 1));
 
 		// put the old data inside the new array
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inListSize, Large.m_data + idx,
-			m_size - idx + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inListSize, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 
 		// Remove and free the old array
 		free(Large.m_data);
@@ -399,17 +380,17 @@ void String::Insert(uint32 idx, const char* inStr, uint32 inCount)
 	else
 	{
 		// Create the hole in memory for inList data 
-		memmove(Large.m_data + idx + inListSize, Large.m_data + idx,
-			m_size - idx + 1);
+		memmove(Large.m_data + inIndex + inListSize, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 	}
 	// Put the inList data inside the new array at the right position
-	memcpy(Large.m_data + idx, inStr, inListSize);
+	memcpy(Large.m_data + inIndex, inStr, inListSize);
 	m_size = FutureSize;
 }
 
-void String::Insert(uint32 idx, const String& inStr, uint32 inPos, uint32 inCount)
+void String::Insert(uint32 inIndex, const String& inStr, uint32 inPos, uint32 inCount)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inStr);
 		return;
@@ -419,13 +400,12 @@ void String::Insert(uint32 idx, const String& inStr, uint32 inPos, uint32 inCoun
 	uint32 FutureSize = inListSize + m_size;
 	if (FutureSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[FutureSize+1];
+		char* newData = (char*)malloc(sizeof(char) * (FutureSize + 1));
 
 		// put the old data inside the new array
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inListSize, Large.m_data + idx,
-			m_size - idx + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inListSize, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 
 		// Remove and free the old array
 		free(Large.m_data);
@@ -435,17 +415,17 @@ void String::Insert(uint32 idx, const String& inStr, uint32 inPos, uint32 inCoun
 	else
 	{
 		// Create the hole in memory for inList data 
-		memmove(Large.m_data + idx + inListSize, Large.m_data + idx,
-			m_size - idx + 1);
+		memmove(Large.m_data + inIndex + inListSize, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 	}
 	// Put the inList data inside the new array at the right position
-	memcpy(Large.m_data + idx, inStr.Data(), inListSize);
+	memcpy(Large.m_data + inIndex, inStr.Data(), inListSize);
 	m_size = FutureSize;
 }
 
-void String::Insert(uint32 idx, const StringView& inStr, uint32 inPos, uint32 inCount)
+void String::Insert(uint32 inIndex, const StringView inStr, uint32 inPos, uint32 inCount)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inStr);
 		return;
@@ -455,13 +435,12 @@ void String::Insert(uint32 idx, const StringView& inStr, uint32 inPos, uint32 in
 	uint32 FutureSize = inListSize + m_size;
 	if (FutureSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[FutureSize+1];
+		char* newData = (char*)malloc(sizeof(char) * (FutureSize + 1));
 
 		// put the old data inside the new array
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inListSize, Large.m_data + idx,
-			m_size - idx + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inListSize, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 
 		// Remove and free the old array
 		free(Large.m_data);
@@ -471,17 +450,17 @@ void String::Insert(uint32 idx, const StringView& inStr, uint32 inPos, uint32 in
 	else
 	{
 		// Create the hole in memory for inList data 
-		memmove(Large.m_data + idx + inListSize, Large.m_data + idx,
-			m_size - idx + 1);
+		memmove(Large.m_data + inIndex + inListSize, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 	}
 	// Put the inList data inside the new array at the right position
-	memcpy(Large.m_data + idx, inStr.Data(), inListSize);
+	memcpy(Large.m_data + inIndex, inStr.Data(), inListSize);
 	m_size = FutureSize;
 }
 
-void String::Insert(uint32 idx, const std::initializer_list<char>& inList)
+void String::Insert(uint32 inIndex, const std::initializer_list<char> inList)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inList);
 		return;
@@ -491,13 +470,12 @@ void String::Insert(uint32 idx, const std::initializer_list<char>& inList)
 	uint32 FutureSize = inListSize + m_size;
 	if (FutureSize > Large.m_capacity)
 	{
-		// @todo replace that new by an alloc because new initialized data but we don't want that
-		char* newData = new char[FutureSize+1];
+		char* newData = (char*)malloc(sizeof(char) * (FutureSize + 1));
 
 		// put the old data inside the new array
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inListSize, Large.m_data + idx,
-			m_size - idx + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inListSize, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 
 		// Remove and free the old array
 		free(Large.m_data);
@@ -507,11 +485,11 @@ void String::Insert(uint32 idx, const std::initializer_list<char>& inList)
 	else
 	{
 		// Create the hole in memory for inList data 
-		memmove(Large.m_data + idx + inListSize, Large.m_data + idx,
-			m_size - idx + 1);
+		memmove(Large.m_data + inIndex + inListSize, Large.m_data + inIndex,
+			m_size - inIndex + 1);
 	}
 	// Put the inList data inside the new array at the right position
-	memcpy(Large.m_data + idx, inList.begin(), inListSize);
+	memcpy(Large.m_data + inIndex, inList.begin(), inListSize);
 	m_size = FutureSize;
 }
 
@@ -520,8 +498,7 @@ void String::Append(uint32 inCount, char c)
 	uint32 newSize = m_size + inCount;
 	if (newSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newSize];
+		char* newData = (char*)malloc(sizeof(char) * (newSize + 1));
 
 		memcpy(newData, Large.m_data, m_size);
 
@@ -545,8 +522,7 @@ void String::Append(const char* inStr, uint32_t inCount)
 	uint32_t newTotalSize = m_size + inCount;
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
 		memcpy(newData, Large.m_data, m_size);
 
@@ -569,8 +545,7 @@ void String::Append(const String& inStr, uint32_t inPos, uint32_t inCount)
 	uint32_t newTotalSize = m_size + inCount;
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
 		memcpy(newData, Large.m_data, m_size);
 
@@ -593,8 +568,7 @@ void String::Append(const StringView inStr, uint32_t inPos, uint32_t inCount)
 	uint32_t newTotalSize = m_size + inCount;
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
 		memcpy(newData, Large.m_data, m_size);
 
@@ -612,8 +586,7 @@ void String::Append(const std::initializer_list<char> inList)
 	uint32_t newTotalSize = m_size + inList.size();
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
 		memcpy(newData, Large.m_data, m_size);
 
@@ -627,22 +600,21 @@ void String::Append(const std::initializer_list<char> inList)
 	m_size = newTotalSize;
 }
 
-void String::Replace(uint32 idx, uint32 count, uint32 inCountToInsert, char c)
+void String::Replace(uint32 inIndex, uint32 inCountToReplace, uint32 inCountToInsert, char c)
 {
-	if (count == 0)
+	if (inCountToReplace == 0)
 	{
-		Insert(idx, inCountToInsert, c);
+		Insert(inIndex, inCountToInsert, c);
 		return;
 	}
 
-	uint32_t newTotalSize = m_size - count + inCountToInsert;
+	uint32_t newTotalSize = m_size - inCountToReplace + inCountToInsert;
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inCountToInsert, Large.m_data + idx + count, m_size - idx - count + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inCountToInsert, Large.m_data + inIndex + inCountToReplace, m_size - inIndex - inCountToReplace + 1);
 
 		free(Large.m_data);
 		Large.m_data = newData;
@@ -650,17 +622,17 @@ void String::Replace(uint32 idx, uint32 count, uint32 inCountToInsert, char c)
 	}
 	else
 	{
-		memmove(Large.m_data + idx + inCountToInsert, Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memmove(Large.m_data + inIndex + inCountToInsert, Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 	}
 
-	memset(Large.m_data + idx, c, inCountToInsert);
+	memset(Large.m_data + inIndex, c, inCountToInsert);
 	m_size = newTotalSize;
 }
 
-void String::Replace(uint32 idx, uint32 count, const char* inStr, uint32 inCountToInsert)
+void String::Replace(uint32 inIndex, uint32 inCountToReplace, const char* inStr, uint32 inCountToInsert)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inStr, inCountToInsert);
 		return;
@@ -671,15 +643,14 @@ void String::Replace(uint32 idx, uint32 count, const char* inStr, uint32 inCount
 		inCountToInsert = strlen(inStr);
 	}
 
-	uint32 newTotalSize = m_size + inCountToInsert - count;
+	uint32 newTotalSize = m_size + inCountToInsert - inCountToReplace;
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inCountToInsert, Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inCountToInsert, Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 
 		free(Large.m_data);
 		Large.m_data = newData;
@@ -687,16 +658,16 @@ void String::Replace(uint32 idx, uint32 count, const char* inStr, uint32 inCount
 	}
 	else
 	{
-		memmove(Large.m_data + idx + inCountToInsert, Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memmove(Large.m_data + inIndex + inCountToInsert, Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 	}
-	memcpy(Large.m_data + idx, inStr, inCountToInsert);
+	memcpy(Large.m_data + inIndex, inStr, inCountToInsert);
 	m_size = newTotalSize;
 }
 
-void String::Replace(uint32 idx, uint32 count, const String& inStr, uint32 inPos, uint32 inCountToInsert)
+void String::Replace(uint32 inIndex, uint32 inCountToReplace, const String& inStr, uint32 inPos, uint32 inCountToInsert)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inStr, inPos, inCountToInsert);
 		return;
@@ -707,15 +678,14 @@ void String::Replace(uint32 idx, uint32 count, const String& inStr, uint32 inPos
 		inCountToInsert = inStr.Size() - inPos;
 	}
 
-	uint32 newTotalSize = m_size + inCountToInsert - count;
+	uint32 newTotalSize = m_size + inCountToInsert - inCountToReplace;
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inCountToInsert, Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inCountToInsert, Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 
 		free(Large.m_data);
 		Large.m_data = newData;
@@ -723,16 +693,16 @@ void String::Replace(uint32 idx, uint32 count, const String& inStr, uint32 inPos
 	}
 	else
 	{
-		memmove(Large.m_data + idx + inCountToInsert, Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memmove(Large.m_data + inIndex + inCountToInsert, Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 	}
-	memcpy(Large.m_data + idx, inStr.Data(), inCountToInsert);
+	memcpy(Large.m_data + inIndex, inStr.Data(), inCountToInsert);
 	m_size = newTotalSize;
 }
 
-void String::Replace(uint32 idx, uint32 count, const StringView inStr, uint32 inPos, uint32 inCountToInsert)
+void String::Replace(uint32 inIndex, uint32 inCountToReplace, const StringView inStr, uint32 inPos, uint32 inCountToInsert)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inStr, inPos, inCountToInsert);
 		return;
@@ -743,15 +713,14 @@ void String::Replace(uint32 idx, uint32 count, const StringView inStr, uint32 in
 		inCountToInsert = inStr.Size() - inPos;
 	}
 
-	uint32 newTotalSize = m_size + inCountToInsert - count;
+	uint32 newTotalSize = m_size + inCountToInsert - inCountToReplace;
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inCountToInsert, Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inCountToInsert, Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 
 		free(Large.m_data);
 		Large.m_data = newData;
@@ -759,30 +728,29 @@ void String::Replace(uint32 idx, uint32 count, const StringView inStr, uint32 in
 	}
 	else
 	{
-		memmove(Large.m_data + idx + inCountToInsert, Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memmove(Large.m_data + inIndex + inCountToInsert, Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 	}
-	memcpy(Large.m_data + idx, inStr.Data(), inCountToInsert);
+	memcpy(Large.m_data + inIndex, inStr.Data(), inCountToInsert);
 	m_size = newTotalSize;
 }
 
-void String::Replace(uint32 idx, uint32 count, const std::initializer_list<char> inList)
+void String::Replace(uint32 inIndex, uint32 inCountToReplace, const std::initializer_list<char> inList)
 {
-	if (idx == m_size)
+	if (inIndex == m_size)
 	{
 		Append(inList);
 		return;
 	}
 
-	uint32 newTotalSize = m_size + inList.size() - count;
+	uint32 newTotalSize = m_size + inList.size() - inCountToReplace;
 	if (newTotalSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[newTotalSize + 1];
+		char* newData = (char*)malloc(sizeof(char) * (newTotalSize + 1));
 
-		memcpy(newData, Large.m_data, idx);
-		memmove(newData + idx + inList.size(), Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memcpy(newData, Large.m_data, inIndex);
+		memmove(newData + inIndex + inList.size(), Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 
 		free(Large.m_data);
 		Large.m_data = newData;
@@ -790,18 +758,18 @@ void String::Replace(uint32 idx, uint32 count, const std::initializer_list<char>
 	}
 	else
 	{
-		memmove(Large.m_data + idx + inList.size(), Large.m_data + idx + count,
-			m_size - idx - count + 1);
+		memmove(Large.m_data + inIndex + inList.size(), Large.m_data + inIndex + inCountToReplace,
+			m_size - inIndex - inCountToReplace + 1);
 	}
 
-	memcpy(Large.m_data + idx, inList.begin(), inList.size());
+	memcpy(Large.m_data + inIndex, inList.begin(), inList.size());
 	m_size = newTotalSize;
 }
 
-void String::Erase(uint32 idx, uint32 inCount)
+void String::Erase(uint32 inIndex, uint32 inCount)
 {
-	memmove(Large.m_data + idx, Large.m_data + idx + inCount,
-		m_size - idx - inCount + 1);
+	memmove(Large.m_data + inIndex, Large.m_data + inIndex + inCount,
+		m_size - inIndex - inCount + 1);
 	m_size = m_size - inCount;
 }
 
@@ -810,8 +778,7 @@ void String::PushBack(char c)
 	uint32 inFutureSize = m_size + 1;
 	if (inFutureSize > Large.m_capacity)
 	{
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		char* newData = new char[inFutureSize];
+		char* newData = (char*)malloc(sizeof(char) * (inFutureSize + 1));
 
 		memcpy(newData, Large.m_data, m_size);
 		newData[m_size] = c;

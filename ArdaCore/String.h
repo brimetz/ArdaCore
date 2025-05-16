@@ -3,7 +3,6 @@
 #include <ArdaCore/Core.h>
 #include <ArdaCore/StringView.h>
 
-// @todo remove & on initializerr list and StringView in function variable
 struct String
 {
 	String();
@@ -50,11 +49,11 @@ struct String
 
 	void Resize(uint32 inSize, char c = '\0');
 
-	void Insert(uint32 idx, uint32 inCount, char c);
-	void Insert(uint32 idx, const char* inStr, uint32 inCount = UINT32_MAX);
-	void Insert(uint32 idx, const String& inStr, uint32 inPos = 0, uint32 inCount = UINT32_MAX);
-	void Insert(uint32 idx, const StringView& inStr, uint32 inPos = 0, uint32 inCount = UINT32_MAX);
-	void Insert(uint32 idx, const std::initializer_list<char>& inList);
+	void Insert(uint32 inIndex, uint32 inCount, char c);
+	void Insert(uint32 inIndex, const char* inStr, uint32 inCount = UINT32_MAX);
+	void Insert(uint32 inIndex, const String& inStr, uint32 inPos = 0, uint32 inCount = UINT32_MAX);
+	void Insert(uint32 inIndex, const StringView inStr, uint32 inPos = 0, uint32 inCount = UINT32_MAX);
+	void Insert(uint32 inIndex, const std::initializer_list<char> inList);
 
 	void Append(uint32 inCount, char c);
 	void Append(const char* inStr, uint32_t inCount = UINT32_MAX);
@@ -62,16 +61,16 @@ struct String
 	void Append(const StringView inStr, uint32_t inPos = 0, uint32_t inCount = UINT32_MAX);
 	void Append(const std::initializer_list<char> inList);
 
-	void Replace(uint32 idx, uint32 count, uint32 count2, char c);
-	void Replace(uint32 idx, uint32 count, const char* inStr,
+	void Replace(uint32 inIndex, uint32 inCountToReplace, uint32 inCountToInsert, char c);
+	void Replace(uint32 inIndex, uint32 inCountToReplace, const char* inStr,
 		uint32 inCountToInsert = UINT32_MAX);
-	void Replace(uint32 idx, uint32 count, const String& inStr, uint32 inPos = 0,
+	void Replace(uint32 inIndex, uint32 inCountToReplace, const String& inStr, uint32 inPos = 0,
 		uint32 inCountToInsert = UINT32_MAX);
-	void Replace(uint32 idx, uint32 count, const StringView inStr,
+	void Replace(uint32 inIndex, uint32 inCountToReplace, const StringView inStr,
 		uint32 inPos = 0, uint32 inCountToInsert = UINT32_MAX);
-	void Replace(uint32 idx, uint32 count, const std::initializer_list<char> inList);
+	void Replace(uint32 inIndex, uint32 inCountToReplace, const std::initializer_list<char> inList);
 
-	void Erase(uint32 idx, uint32 count = 1);
+	void Erase(uint32 inIndex, uint32 inCount = 1);
 
 	void PushBack(char c);
 	void PopBack();

@@ -17,8 +17,8 @@ struct StringView
 	uint32 Size() const { return m_size; }
 	const char* Data() const { return m_data; }
 
-	bool operator==(const StringView& inOther) const;
-	StringView& operator=(const StringView& inOther);
+	bool operator==(const StringView inOther) const;
+	StringView& operator=(const StringView inOther);
 	char operator[](uint32 inIndex);
 
 	char Front() const { return m_data[0]; }

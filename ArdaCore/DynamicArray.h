@@ -5,10 +5,7 @@
 #include <utility>
 #include <new>
 
-// @todo remove "m_" and put "in" in function parameter 
-// find right name for template variable
-
-template <typename T>
+template <typename DataType>
 struct DynamicArray
 {
 	constexpr DynamicArray() = default;
@@ -16,34 +13,34 @@ struct DynamicArray
 
 	DynamicArray(DynamicArray&& inOther);
 	DynamicArray(DynamicArray const& inOther);
-	DynamicArray(const std::initializer_list<T>& inInitializerList);
+	DynamicArray(const std::initializer_list<DataType> inInitializerList);
 
 	DynamicArray& operator=(DynamicArray&& inOther);
 	DynamicArray& operator=(DynamicArray const& inOther);
-	DynamicArray& operator=(const std::initializer_list<T>& inInitializerList);
+	DynamicArray& operator=(const std::initializer_list<DataType> inInitializerList);
 
 	int Size() const { return m_size; }
 	int Capacity() const { return m_capacity; }
 	bool IsEmpty() const { return m_size == 0; }
 
-	constexpr T* GetData() { return m_data; };
+	constexpr DataType* GetData() { return m_data; };
 
 	// Used that for iterator iteration. "m_data + m_size" return the first invalid pointer after the array
-	constexpr T* End() { return m_data + m_size; }
-	constexpr T* Begin() { return m_data; }
-	constexpr T* end() { return m_data + m_size; }
-	constexpr T* begin() { return m_data; }
-	constexpr const T* End() const { return m_data + m_size; }
-	constexpr const T* Begin() const { return m_data; }
-	constexpr const T* end() const { return m_data + m_size; }
-	constexpr const T* begin() const { return m_data; }
+	constexpr DataType* End() { return m_data + m_size; }
+	constexpr DataType* Begin() { return m_data; }
+	constexpr DataType* end() { return m_data + m_size; }
+	constexpr DataType* begin() { return m_data; }
+	constexpr const DataType* End() const { return m_data + m_size; }
+	constexpr const DataType* Begin() const { return m_data; }
+	constexpr const DataType* end() const { return m_data + m_size; }
+	constexpr const DataType* begin() const { return m_data; }
 
-	constexpr T& operator[](int inIndex)
+	constexpr DataType& operator[](int inIndex)
 	{ 
 		Assert(inIndex >= 0 && inIndex < m_size)
 		return m_data[inIndex]; 
 	}
-	constexpr T const& operator[](int inIndex) const
+	constexpr DataType const& operator[](int inIndex) const
 	{
 		Assert(inIndex >= 0 && inIndex < m_size)
 		return m_data[inIndex];
@@ -52,10 +49,10 @@ struct DynamicArray
 	void Clear();
 	void FreeMemory();
 
-	constexpr T* Front() const { return m_data; }
-	constexpr T* Back() const { return m_data + m_size-1; }
+	constexpr DataType* Front() const { return m_data; }
+	constexpr DataType* Back() const { return m_data + m_size-1; }
 	
-	constexpr T* GetElement(int inIndex) const
+	constexpr DataType* GetElement(int inIndex) const
 	{
 		Assert(inIndex >= 0 && inIndex < m_size)
 		return m_data[inIndex];
@@ -64,49 +61,48 @@ struct DynamicArray
 	// Manage Capacity
 	void Reserve(int inCapacity);
 	void Resize(int inCapacity);
-	void Resize(int inNewSize, T const& inBaseValue);
+	void Resize(int inNewSize, DataType const& inBaseValue);
 
 	// Add element
-	void Insert(int inPosition, T const& inValue);
-	void Insert(int inPosition, T&& inValue);
+	void Insert(int inPosition, DataType const& inValue);
+	void Insert(int inPosition, DataType&& inValue);
 
 	// @todo Emplace take variadic argument
-	//void Emplace(int inPosition, const T& inValue);
+	//void Emplace(int inPosition, const DataType& inValue);
 
 	void Erase(int inPosition);
 
-	void PushBack(const T& inValue);
-	void PushBack(T&& inValue);
+	void PushBack(const DataType& inValue);
+	void PushBack(DataType&& inValue);
 	void PopBack();
 
 private:
-	T* m_data = nullptr;
+	DataType* m_data = nullptr;
 	int m_size = 0;
 	int m_capacity = 0;
 };
 
-template<typename T>
-DynamicArray<T>::~DynamicArray()
+template<typename DataType>
+DynamicArray<DataType>::~DynamicArray()
 {
 	Clear();
 	FreeMemory();
 }
 
-template<typename T>
-DynamicArray<T>::DynamicArray(DynamicArray const& inOther)
+template<typename DataType>
+DynamicArray<DataType>::DynamicArray(DynamicArray const& inOther)
 {
 	Reserve(inOther.m_size);
 	m_size = inOther.m_size;
 
 	for (int index = 0; index < inOther.m_size; index++)
 	{
-		new (m_data+index) T(inOther.m_data[index]);
+		new (m_data+index) DataType(inOther.m_data[index]);
 	}
-
 }
 
-template<typename T>
-DynamicArray<T>::DynamicArray(DynamicArray&& inOther)
+template<typename DataType>
+DynamicArray<DataType>::DynamicArray(DynamicArray&& inOther)
 {
 	m_data = std::move(inOther.m_data);
 	m_size = std::move(inOther.m_size);
@@ -115,19 +111,19 @@ DynamicArray<T>::DynamicArray(DynamicArray&& inOther)
 	inOther.FreeMemory();
 }
 
-template<typename T>
-DynamicArray<T>::DynamicArray(const std::initializer_list<T>& inInitializerList)
+template<typename DataType>
+DynamicArray<DataType>::DynamicArray(const std::initializer_list<DataType> inInitializerList)
 {
 	Reserve(inInitializerList.size());
 
-	for (const T& value : inInitializerList)
+	for (const DataType& value : inInitializerList)
 	{
 		PushBack(value);
 	}
 }
 
-template<typename T>
-DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray&& inOther)
+template<typename DataType>
+DynamicArray<DataType>& DynamicArray<DataType>::operator=(DynamicArray&& inOther)
 {
 	m_data = std::move(inOther.m_data);
 	m_size = std::move(inOther.m_size);
@@ -140,37 +136,37 @@ DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray&& inOther)
 	return *this;
 }
 
-template<typename T>
-DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray const& inOther)
+template<typename DataType>
+DynamicArray<DataType>& DynamicArray<DataType>::operator=(DynamicArray const& inOther)
 {
 	for (int index = 0; index < m_size; index++)
 	{
-		m_data[index].~T();
+		m_data[index].~DataType();
 	}
 
 	Reserve(inOther.m_size);
 
 	for (int index = 0; index < inOther.m_size; index++)
 	{
-		new (m_data + index) T(inOther.m_data[index]);
+		new (m_data + index) DataType(inOther.m_data[index]);
 	}
 
 	m_size = inOther.m_size;
 	return *this;
 }
 
-template<typename T>
-DynamicArray<T>& DynamicArray<T>::operator=(const std::initializer_list<T>& inInitializerList)
+template<typename DataType>
+DynamicArray<DataType>& DynamicArray<DataType>::operator=(const std::initializer_list<DataType> inInitializerList)
 {
 	for (int index = 0; index < m_size; index++)
 	{
-		m_data[index].~T();
+		m_data[index].~DataType();
 	}
 	m_size = 0;
 	
 	Reserve(inInitializerList.size());
 
-	for (const T& value : inInitializerList)
+	for (const DataType& value : inInitializerList)
 	{
 		PushBack(value);
 	}
@@ -178,26 +174,26 @@ DynamicArray<T>& DynamicArray<T>::operator=(const std::initializer_list<T>& inIn
 	return *this;
 }
 
-template<typename T>
-void DynamicArray<T>::Clear()
+template<typename DataType>
+void DynamicArray<DataType>::Clear()
 {
 	for (int index = 0; index < m_size; index++)
 	{
-		m_data[index].~T();
+		m_data[index].~DataType();
 	}
 	m_size = 0;
 }
 
-template<typename T>
-void DynamicArray<T>::FreeMemory()
+template<typename DataType>
+void DynamicArray<DataType>::FreeMemory()
 {
 	m_size = 0;
 	m_capacity = 0;
 	free(m_data);
 }
 
-template<typename T>
-void DynamicArray<T>::Reserve(int inCapacity)
+template<typename DataType>
+void DynamicArray<DataType>::Reserve(int inCapacity)
 {
 	if (m_capacity > inCapacity)
 	{
@@ -209,20 +205,19 @@ void DynamicArray<T>::Reserve(int inCapacity)
 	// Other Solution
 	// @todo Jeremie laumon has a TryRealloc to skip the copy sometime, TryRealloc give a bool to know if the allocation was possible
 	// in this case, we don't have to copy and free the old buffer
-	// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-	T* newdata = new T[m_capacity];
+	DataType* newData = (DataType*)malloc(sizeof(DataType) * (m_capacity));
 	
 	for (int index = 0; index < m_size; index++)
 	{
-		newdata[index] = std::move(m_data[index]);
-		m_data[index].~T();
+		newData[index] = std::move(m_data[index]);
+		m_data[index].~DataType();
 	}
 	free(m_data);
-	m_data = newdata;
+	m_data = newData;
 }
 
-template<typename T>
-void DynamicArray<T>::Resize(int inNewSize)
+template<typename DataType>
+void DynamicArray<DataType>::Resize(int inNewSize)
 {
 	if (inNewSize == m_size)
 	{
@@ -234,7 +229,7 @@ void DynamicArray<T>::Resize(int inNewSize)
 		// need to shrink the array
 		for (uint32 index = inNewSize; index < m_size; index++)
 		{
-			m_data[index].~T();
+			m_data[index].~DataType();
 		}
 	}
 	else
@@ -243,15 +238,15 @@ void DynamicArray<T>::Resize(int inNewSize)
 		Reserve(inNewSize);
 		for (uint32 index = m_size; index < inNewSize; index++)
 		{
-			new (m_data + index) T();
+			new (m_data + index) DataType();
 		}
 	}
 
 	m_size = inNewSize;
 }
 
-template<typename T>
-void DynamicArray<T>::Resize(int inNewSize, T const& inBaseValue)
+template<typename DataType>
+void DynamicArray<DataType>::Resize(int inNewSize, DataType const& inBaseValue)
 {
 	if (inNewSize == m_size)
 	{
@@ -263,7 +258,7 @@ void DynamicArray<T>::Resize(int inNewSize, T const& inBaseValue)
 		// need to shrink the array
 		for (uint32 index = inNewSize; index < m_size; index++)
 		{
-			m_data[index].~T();
+			m_data[index].~DataType();
 		}
 	}
 	else
@@ -272,15 +267,15 @@ void DynamicArray<T>::Resize(int inNewSize, T const& inBaseValue)
 		Reserve(inNewSize);
 		for (uint32 index = m_size; index < inNewSize; index++)
 		{
-			new (m_data + index) T(inBaseValue);
+			new (m_data + index) DataType(inBaseValue);
 		}
 	}
 
 	m_size = inNewSize;
 }
 
-template<typename T>
-void DynamicArray<T>::Insert(int inPosition, T const& inValue)
+template<typename DataType>
+void DynamicArray<DataType>::Insert(int inPosition, DataType const& inValue)
 {
 	if (inPosition == m_size)
 	{
@@ -291,41 +286,40 @@ void DynamicArray<T>::Insert(int inPosition, T const& inValue)
 	if (m_capacity < m_size + 1)
 	{
 		m_capacity *= 2;
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		T* newdata = new T[m_capacity];
+		DataType* newData = (DataType*)malloc(sizeof(DataType) * (m_capacity));
 
 		for (int index = 0; index < inPosition; index++)
 		{
-			new (newdata + index) T(std::move(m_data[index]));
-			m_data[index].~T();
+			new (newData + index) DataType(std::move(m_data[index]));
+			m_data[index].~DataType();
 		}
 
-		new (newdata + inPosition) T(inValue);
+		new (newData + inPosition) DataType(inValue);
 
 		for (int index = inPosition + 1; index < m_size + 1; index++)
 		{
-			new (newdata + index) T(std::move(m_data[index - 1]));
-			m_data[index-1].~T();
+			new (newData + index) DataType(std::move(m_data[index - 1]));
+			m_data[index-1].~DataType();
 		}
 
 		free(m_data);
-		m_data = newdata;
+		m_data = newData;
 	}
 	else // No realloc needed
 	{
 		// Move all elements after the new elements one to the right
 		for (int index = m_size; index != inPosition; index--)
 		{
-			new (m_data + index) T(std::move(m_data[index - 1]));
-			m_data[index - 1].~T();
+			new (m_data + index) DataType(std::move(m_data[index - 1]));
+			m_data[index - 1].~DataType();
 		}
-		new (m_data + inPosition) T(inValue);
+		new (m_data + inPosition) DataType(inValue);
 	}
 	m_size += 1;
 }
 
-template<typename T>
-void DynamicArray<T>::Insert(int inPosition, T&& inValue)
+template<typename DataType>
+void DynamicArray<DataType>::Insert(int inPosition, DataType&& inValue)
 {
 	if (inPosition == m_size)
 	{
@@ -336,41 +330,40 @@ void DynamicArray<T>::Insert(int inPosition, T&& inValue)
 	if (m_capacity < m_size + 1)
 	{
 		m_capacity *= 2;
-		// @todo faut pas faire un new parce que le new il alloue et initialized et nous on veut que allouer used malloc pour juste allouer
-		T* newdata = new T[m_capacity];
+		DataType* newData = (DataType*)malloc(sizeof(DataType) * (m_capacity));
 
 		for (int index = 0; index < inPosition; index++)
 		{
-			new (newdata + index) T(std::move(m_data[index]));
-			m_data[index].~T();
+			new (newData + index) DataType(std::move(m_data[index]));
+			m_data[index].~DataType();
 		}
 
-		new (newdata + inPosition) T(std::move(inValue));
+		new (newData + inPosition) DataType(std::move(inValue));
 
 		for (int index = inPosition + 1; index < m_size + 1; index++)
 		{
-			new (newdata + index) T(std::move(m_data[index - 1]));
-			m_data[index - 1].~T();
+			new (newData + index) DataType(std::move(m_data[index - 1]));
+			m_data[index - 1].~DataType();
 		}
 
 		free(m_data);
-		m_data = newdata;
+		m_data = newData;
 	}
 	else // No realloc needed
 	{
 		// Move all elements after the new elements one to the right
 		for (int index = m_size; index != inPosition; index--)
 		{
-			new (m_data + index) T(std::move(m_data[index - 1]));
-			m_data[index - 1].~T();
+			new (m_data + index) DataType(std::move(m_data[index - 1]));
+			m_data[index - 1].~DataType();
 		}
-		new (m_data + inPosition) T(std::move(inValue));
+		new (m_data + inPosition) DataType(std::move(inValue));
 	}
 	m_size += 1;
 }
 
-/*template<typename T>
-void DynamicArray<T>::Emplace(int inPosition, const T& inValue)
+/*template<typename DataType>
+void DynamicArray<DataType>::Emplace(int inPosition, const DataType& inValue)
 {
 	if (inPosition == m_size)
 	{
@@ -381,12 +374,12 @@ void DynamicArray<T>::Emplace(int inPosition, const T& inValue)
 	if (m_capacity < m_size + 1)
 	{
 		m_capacity *= 2;
-		T* newdata = new T[m_capacity];
+		DataType* newdata = new DataType[m_capacity];
 
 		for (int index = 0; index < inPosition; index++)
 		{
 			newdata[index] = m_data[index];
-			m_data[index].~T();
+			m_data[index].~DataType();
 		}
 
 		newdata[inPosition] = inValue;
@@ -394,7 +387,7 @@ void DynamicArray<T>::Emplace(int inPosition, const T& inValue)
 		for (int index = inPosition + 1; index < m_size + 1; index++)
 		{
 			newdata[index] = m_data[index - 1];
-			m_data[index - 1].~T();
+			m_data[index - 1].~DataType();
 		}
 
 		free(m_data);
@@ -412,8 +405,8 @@ void DynamicArray<T>::Emplace(int inPosition, const T& inValue)
 	m_size += 1;
 }*/
 
-template<typename T>
-void DynamicArray<T>::Erase(int inPosition)
+template<typename DataType>
+void DynamicArray<DataType>::Erase(int inPosition)
 {
 	Assert(inPosition < m_size);
 
@@ -425,15 +418,15 @@ void DynamicArray<T>::Erase(int inPosition)
 
 	for (int index = inPosition; index < m_size - 1; index++)
 	{
-		m_data[index].~T();
-		new (m_data + index) T(std::move(m_data[index + 1]));
+		m_data[index].~DataType();
+		new (m_data + index) DataType(std::move(m_data[index + 1]));
 	}
-	m_data[m_size-1].~T();
+	m_data[m_size-1].~DataType();
 	m_size--;
 }
 
-template<typename T>
-void DynamicArray<T>::PushBack(const T& inValue)
+template<typename DataType>
+void DynamicArray<DataType>::PushBack(const DataType& inValue)
 {
 	if (m_capacity < m_size + 1)
 	{
@@ -445,12 +438,12 @@ void DynamicArray<T>::PushBack(const T& inValue)
 		Reserve(m_capacity * 2);
 	}
 
-	new (m_data + m_size) T(inValue);
+	new (m_data + m_size) DataType(inValue);
 	m_size += 1;
 }
 
-template<typename T>
-void DynamicArray<T>::PushBack(T&& inValue)
+template<typename DataType>
+void DynamicArray<DataType>::PushBack(DataType&& inValue)
 {
 	if (m_capacity < m_size + 1)
 	{
@@ -462,14 +455,14 @@ void DynamicArray<T>::PushBack(T&& inValue)
 		Reserve(m_capacity * 2);
 	}
 	
-	new (m_data + m_size) T(std::move(inValue));
+	new (m_data + m_size) DataType(std::move(inValue));
 	m_size += 1;
 }
 
-template<typename T>
-void DynamicArray<T>::PopBack()
+template<typename DataType>
+void DynamicArray<DataType>::PopBack()
 {
 	Assert(m_size >= 1);
 	m_size--;
-	m_data[m_size].~T();
+	m_data[m_size].~DataType();
 }

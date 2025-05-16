@@ -2,7 +2,7 @@
 #include <string.h>
 #include "Assert.h"
 
-bool StringView::operator==(const StringView& inOther) const
+bool StringView::operator==(const StringView inOther) const
 {
 	if (m_size != inOther.m_size)
 	{
@@ -12,7 +12,7 @@ bool StringView::operator==(const StringView& inOther) const
 	return Contains(inOther);
 }
 
-StringView& StringView::operator=(const StringView& inOther)
+StringView& StringView::operator=(const StringView inOther)
 {
 	m_data = inOther.m_data;
 	m_size = inOther.m_size;
