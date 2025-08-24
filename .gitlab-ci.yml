@@ -5,11 +5,9 @@ stages:
 variables:
   BUILD_DIR: build
 
-default:
-  image: "kitware/cmake:3.29.5-gcc-12"
-
 build:
   stage: build
+  image: gcc:12
   before_script:
     - apt-get update && apt-get install -y cmake ninja-build g++
   script:
@@ -21,6 +19,7 @@ build:
 
 test:
   stage: test
+  image: gcc:12
   before_script:
     - apt-get update && apt-get install -y cmake ninja-build g++
   script:
