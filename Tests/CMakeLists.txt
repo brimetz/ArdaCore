@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.29.5)
+﻿cmake_minimum_required (VERSION 3.25)
 
 include(CheckIncludeFileCXX)
 check_include_file_cxx("cstring" HAS_CSTRING)
