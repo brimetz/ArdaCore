@@ -1,5 +1,9 @@
 ﻿cmake_minimum_required (VERSION 3.29.5)
 
+include(CheckIncludeFileCXX)
+check_include_file_cxx("cstring" HAS_CSTRING)
+message(STATUS "Has <cstring>: ${HAS_CSTRING}")
+
 #project ("ArdaCoreTests")
 
 # Add all files from the source/ folder to CMake
