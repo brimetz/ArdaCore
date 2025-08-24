@@ -20,9 +20,10 @@ build:
 test:
   stage: test
   image: gcc:12
-  dependencies: ["build"] 
   before_script:
     - apt-get update && apt-get install -y cmake ninja-build g++
   script:
+    - cmake -S . -B $BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release
+    - cmake --build $BUILD_DIR
     - cd $BUILD_DIR
     - ctest --output-on-failure
