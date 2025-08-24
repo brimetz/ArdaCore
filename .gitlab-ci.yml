@@ -20,8 +20,7 @@ build:
 test:
   stage: test
   image: gcc:12
-  dependencies:
-    -build
+  dependencies: ["build"] 
   before_script:
     - apt-get update && apt-get install -y cmake ninja-build g++
   script:
