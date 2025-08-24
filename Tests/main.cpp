@@ -1,6 +1,7 @@
 #include "UnitTests.h"
 
-void main(int arc, char** argv)
+int main(int arc, char** argv)
 {
-	TestUnit::GetInstance().RunTestGroups();
+	int nbFailures = TestUnit::GetInstance().RunTestGroups();
+	return nbFailures == 0 ? 0 : 1;
 }
