@@ -27,30 +27,38 @@ TESTGROUP(ArrayView)
 
 	UNITTEST(Operator)
 	{
-		ArrayView dummy({ 0, 1, 2, 3, 4 });
-		ArrayView dummyEqual({ 0, 1, 2, 3, 4 });
+		int test[] = { 0, 1, 2, 3, 4 };
+		int test2[] = { 0, 0, 2, 3, 0 };
+
+		ArrayView dummy(test);
+		ArrayView dummyEqual(test);
 		CHECK_EQUAL(dummy == dummyEqual, true);
 
-		ArrayView dummyNotEqual({ 0, 0, 2, 3, 0 });
+		ArrayView dummyNotEqual(test2);
 		CHECK_EQUAL(dummy == dummyNotEqual, false);
 
 		ArrayView dummy4(dummyEqual);
 		CHECK_EQUAL(dummy4 == dummyEqual, true);
 
-		ArrayView dummy5(ArrayView({ 0, 1, 2, 3, 4 }));
-		CHECK_EQUAL(dummy5 == ArrayView({ 0, 1, 2, 3, 4 }), true);
+		ArrayView dummy5{ArrayView(test)};
+		CHECK_EQUAL(dummy5 == ArrayView(test), true);
 	}
 
 	UNITTEST(SubArray)
 	{
-		ArrayView dummy({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+		int test[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		int test2[] = { 0, 1, 2, 3 };
+		int test3[] = { 6, 7, 8, 9 };
+		int test4[] = { 4, 5, 6 };
+
+		ArrayView dummy(test);
 
 		ArrayView Start(dummy.GetStartTo(4));
-		CHECK_EQUAL(Start == ArrayView({ 0, 1, 2, 3 }), true);
+		CHECK_EQUAL(Start == ArrayView(test2), true);
 
 		ArrayView End(dummy.GetEndFrom(4));
-		CHECK_EQUAL(End == ArrayView({ 6, 7, 8, 9 }), true);
+		CHECK_EQUAL(End == ArrayView(test3), true);
 		ArrayView SubPart(dummy.GetSubArray(4, 3));
-		CHECK_EQUAL(SubPart == ArrayView({ 4, 5, 6 }), true);
+		CHECK_EQUAL(SubPart == ArrayView(test4), true);
 	}
 }

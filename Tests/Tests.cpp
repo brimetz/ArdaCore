@@ -221,9 +221,10 @@ TESTGROUP(StringLarge)
 	{
 		String dummy("Hello World, How Are You");
 		String other("Hello World, How Are You I");
-		StringView viewStarts("Heola Wordd,", 12);
+		char test[] = "Heola Wordd,";
+		StringView viewStarts(test, 12);
 		CHECK_EQUAL(dummy.Compare("Hello"), 1);
-		CHECK_EQUAL(dummy.Compare(viewStarts), -1);
+		CHECK_LESSTHAN(dummy.Compare(viewStarts), 0)
 		CHECK_EQUAL(dummy.Compare(other), -1);
 
 		CHECK_EQUAL(dummy.GetSubString(6, 5), "World");

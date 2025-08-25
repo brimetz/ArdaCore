@@ -77,6 +77,7 @@ constexpr bool ArrayView<DataType>::operator==(ArrayView inOther) const
 {
 	if (m_size != inOther.Size())
 	{
+		printf("1");
 		return false;
 	}
 
@@ -85,7 +86,11 @@ constexpr bool ArrayView<DataType>::operator==(ArrayView inOther) const
 	while (currentIt != End())
 	{
 		if (*currentIt != *otherIt)
+		{
+			printf("%i != %i:", *currentIt, *otherIt);
+			printf("2 \n");
 			return false;
+		}
 
 		++currentIt;
 		++otherIt;
