@@ -7,6 +7,7 @@
 // for new and free
 #include <new>
 
+#include <cstdlib>
 
 // Info From a friend
 // The user-defined ctor is needed because clang and gcc (< 13) misunderstand the
