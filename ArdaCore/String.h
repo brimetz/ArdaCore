@@ -3,6 +3,8 @@
 #include <ArdaCore/Core.h>
 #include <ArdaCore/StringView.h>
 
+#include <cstdint>
+
 struct String
 {
 	String();
